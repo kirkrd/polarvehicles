@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using polarvehicles.Models;
+using System.Data.Entity;
 using System.Data.SQLite;
 
 namespace polarvehicles.Data
@@ -48,10 +49,14 @@ namespace polarvehicles.Data
             sqlite_cmd.ExecuteNonQuery();
             sqlite_cmd.CommandText = "INSERT OR IGNORE INTO Vehicles (vehicleId, modelName, batteryCapacity, batteryEfficency) VALUES('audi_e_tron', 'Audi e-tron', 86, 0.234 ); ";
             sqlite_cmd.ExecuteNonQuery();
+            sqlite_cmd.CommandText = "INSERT OR IGNORE INTO Vehicles (vehicleId, modelName, batteryCapacity, batteryEfficency) VALUES('polestar_2', 'Polestar 2', 78, 0.19 ); ";
+            sqlite_cmd.ExecuteNonQuery();
+            sqlite_cmd.CommandText = "INSERT OR IGNORE INTO Vehicles (vehicleId, modelName, batteryCapacity, batteryEfficency) VALUES('peugeot_e_2008', 'Peugeot e-2008', 50, 0.22 ); ";
+            sqlite_cmd.ExecuteNonQuery();
 
         }
 
-        public static void ReadData(SQLiteConnection conn)
+        public static IEnumerable<ElectricVehicle> ReadData(SQLiteConnection conn)
         {
             SQLiteDataReader sqlite_datareader;
             SQLiteCommand sqlite_cmd;
@@ -59,12 +64,14 @@ namespace polarvehicles.Data
             sqlite_cmd.CommandText = "SELECT * FROM Vehicles";
 
             sqlite_datareader = sqlite_cmd.ExecuteReader();
+            List<ElectricVehicle> vehicles = new();
             while (sqlite_datareader.Read())
             {
                 string myreader = sqlite_datareader.GetString(0);
                 Console.WriteLine(myreader);
             }
             conn.Close();
+            return vehicles;
         }
 
         public static void DropData(SQLiteConnection conn)
